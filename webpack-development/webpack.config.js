@@ -1,5 +1,9 @@
 /*
   开发环境配置：运行即可
+
+  运行项目指令：
+    webpack 会将打包结果输出
+    npx webpack serve 只会在内存中编译，没有输出
 */
 
 const {resolve} = require('path');  //用来处理绝对路径
@@ -7,9 +11,9 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 
 module.exports = {
-  entry: './src/index.js',   //以index.js为打包入口
+  entry: './src/js/index.js',   //以index.js为打包入口
   output: {
-    filename: 'built.js',
+    filename: 'js/built.js',    //css代码都会打包到这
     path: resolve(__dirname,'build'),
     publicPath: './'
   },
@@ -52,7 +56,8 @@ module.exports = {
           //给图片进行重命名
           //[hash:10]取图片的hash的前十位
           //[ext]取文件原来的扩展名
-          name: '[hash:10].[ext]'
+          name: '[hash:10].[ext]',
+          outputPath: 'img'  //输出目录
         }
       },
       {
@@ -66,7 +71,8 @@ module.exports = {
         exclude: /\.(js|css|less|jpg|png|html|gif)$/,
         loader: 'file-loader',
         options: {
-          name: '[hash:10].[ext]'
+          name: '[hash:10].[ext]',
+          outputPath: 'media'
         }
       }
       

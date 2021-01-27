@@ -8,14 +8,33 @@
 
 const {resolve} = require('path');  //用来处理绝对路径
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const { options } = require('less');
 
 
 module.exports = {
-  entry: './src/js/index.js',   //以index.js为打包入口
+  //entry: './src/js/index.js',   //单入口，以index.js为打包入口    
+  /*
+  数组形式：
+  多入口形式["./src/js/index.js","./src/js/main.js"]，所有的入口文件都会形成一个chunk，名称是默认的，输出也只有一个bundle
+
+
+  对象形式：
+  多入口，有几个入口文件就会生成几个chunk,并输出几个bundle,chunk的名称是key
+  entry: {
+    one: './src/js/index.js',
+    two: './src/js/main.js'
+  }
+ */
+ //特殊用法
+  entry: {
+    vendor: ["./src/js/jquery.js","./src/js/common.js"],
+    index: './src/js/index.js',
+    cart: './src/js/cart.js',
+  },
   output: {
-    filename: 'js/built.js',    //css代码都会打包到这
+    //filename: 'js/built.js',    //css代码都会打包到这     如果entry是对象形式 filename: 'js/[name].js',
+    filename: 'js/[name].js',
     path: resolve(__dirname,'build'),
-    publicPath: './'
   },
   module:{
     rules: [
@@ -83,12 +102,26 @@ module.exports = {
     //需求：需要有结构的html文件
     new HtmlWebpackPlugin({
       //复制'./src/index.html'文件，并自动引入打包输出的所有资源(js/css)
-      template: './src/index.html'
+      template: './src/index.html',
+      chunks: ['index','vendor'],      //指定引入的js文件
+      minify: {
+        //移除空格
+        collapseWhitespace: true,
+        //移除注释
+        removeComments: true
+      }
+    }),
+    new HtmlWebpackPlugin({
+      template: './src/cart.html',
+      filename: 'cart.html',        //文件名称，默认为index.html
+      chunks: ['cart','vendor'],
     })   
   ],
+  //在webpack5 需要加上这个配置选项可以自动刷新
+  target: "web",
   mode: 'development',
   devServer: {
-    contentBase: resolve(__dirname,'build'),
+    contentBase: resolve(__dirname,'src'),
     compress: true,
     port: 3000,
     open: true,

@@ -59,7 +59,26 @@ module.exports = {
           //这个loader取代style-loader.作用：提取js中的css成单独文件
           MiniCssExtractPlugin.loader,
           'css-loader',
-          'less-loader'
+          'less-loader',
+          /*
+            css兼容性处理：postcss --> cnpm i postcss-loader postcss-preset-env
+
+            帮postcss找到package.json中browserslist里面的配置，通过配置加载指定的css兼容性样式
+
+             "browserslist": {
+                "development": [
+                  "last 1 chrome version",
+                  "last 1 firefox version",
+                  "last 1 safari version"
+                ],
+                "production": [
+                  ">0.2%",
+                  "not dead",
+                  "not op_mini all"
+                ]
+              }
+          */  
+          'postcss-loader',
         ]
       },
      /*  {

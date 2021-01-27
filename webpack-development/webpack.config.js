@@ -8,7 +8,7 @@
 
 const {resolve} = require('path');  //用来处理绝对路径
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const { options } = require('less');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 
 module.exports = {
@@ -35,30 +35,42 @@ module.exports = {
     //filename: 'js/built.js',    //css代码都会打包到这     如果entry是对象形式 filename: 'js/[name].js',
     filename: 'js/[name].js',
     path: resolve(__dirname,'build'),
+    publicPath:'/build/'
   },
   module:{
     rules: [
+      {
+        test: /\.css$/,   
+        //使用哪些loader进行处理
+        use: [
+          //use数组中loader执行顺序：从右到左，从下到上
+          //把样式插入到DOM中，方法是在head中插入一个style标签，并把样式写入到这个标签的innerHTML里
+          //'style-loader',
+          //作用(处理css中的import和url这样的外部资源)   将css文件变成commonjs模块加载js中，里面内容是样式字符串
+          'css-loader'
+        ]
+      },
       //loader配置
       {
         test: /\.less$/,
         //使用多个loader处理use
         use: [
-          'style-loader',
+          // 'style-loader',
+          //这个loader取代style-loader.作用：提取js中的css成单独文件
+          MiniCssExtractPlugin.loader,
           'css-loader',
           'less-loader'
         ]
       },
-      {
-        test: /\.css$/,   
-        //使用哪些loader进行处理
+     /*  {
+        test: /\.scss$/,
+        //使用多个loader处理use
         use: [
-          //use数组中loader执行顺序：先执行css-loader再执行style-loader
-          //创建style标签，将js中的样式资源插入进去，添加到head中生效
           'style-loader',
-          //将css文件变成commonjs模块加载js中，里面内容是样式字符串
-          'css-loader'
+          'css-loader',
+          'sass-loader'
         ]
-      },
+      }, */
       {
         //问题： 默认处理不了html中img图片
         //处理图片资源
@@ -115,7 +127,11 @@ module.exports = {
       template: './src/cart.html',
       filename: 'cart.html',        //文件名称，默认为index.html
       chunks: ['cart','vendor'],
-    })   
+    }),
+    new MiniCssExtractPlugin({
+      // 对输出文件进行重命名
+      filename: 'css/[name].css'
+    }),   
   ],
   //在webpack5 需要加上这个配置选项可以自动刷新
   target: "web",

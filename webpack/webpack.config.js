@@ -6,14 +6,17 @@
     npx webpack serve 只会在内存中编译，没有输出
 */
 
-const {resolve} = require('path');  //用来处理绝对路径
+const {resolve,join} = require('path');  //用来处理绝对路径
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const OptimizeCssAssetsWebpackPlugin = require('optimize-css-assets-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');   //将css打包成单独的文件
+const OptimizeCssAssetsWebpackPlugin = require('optimize-css-assets-webpack-plugin');  //压缩css
+const PurgeCSSPlugin = require('purgecss-webpack-plugin');   //去除没有用的css代码
+const glob = require('glob');  //node全局环境
+const PATHS = {src:join(__dirname,'src')}      //代表当前目录下的src
 
 
 module.exports = {
-  entry: './src/js/index.js',   //单入口，以index.js为打包入口    
+  entry: ['./src/js/index.js','./src/index.html'],   //单入口，以index.js为打包入口    
   /*
   数组形式：
   多入口形式["./src/js/index.js","./src/js/main.js"]，所有的入口文件都会形成一个chunk，名称是默认的，输出也只有一个bundle
@@ -143,7 +146,7 @@ module.exports = {
           outputPath: 'media'
         }
       },
-      {
+     /*  {
         //eslint只检查js语法
         test: /\.js$/,
         //只检查自己写的代码
@@ -152,7 +155,7 @@ module.exports = {
         options: {
           fix: true
         }
-      }
+      } */
       
     ]
   },
@@ -174,17 +177,19 @@ module.exports = {
       // 对输出文件进行重命名
       filename: 'css/built.css',
     }),
-    //压缩css
     //new OptimizeCssAssetsWebpackPlugin()   
+    new PurgeCSSPlugin({
+      paths: glob.sync(`${PATHS.src}/**/*`,  { nodir: true }),    //子层下的所有文件
+    })
   ],
   //在webpack5 需要加上这个配置选项可以自动刷新
   target: "web",
-  mode: 'development',
-/*   devServer: {
-    contentBase: resolve(__dirname,'src'),
+  // mode: 'development',
+  devServer: {
+    // contentBase: resolve(__dirname,'build'),
     compress: true,
     port: 3000,
     open: true,
-    hot: true
-  } */
+    hot: true       //HRM 模块热更新  只更新改变的文件
+  }
 }

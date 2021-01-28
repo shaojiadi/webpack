@@ -5,7 +5,7 @@
   "main": "webpack.config.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "webpack --mode development",
+    "dev": "webpack serve --mode development",
     "build": "webpack --mode production"
   },
   "author": "sjd",
@@ -25,6 +25,7 @@
     "optimize-css-assets-webpack-plugin": "^5.0.4",
     "postcss-loader": "^4.2.0",
     "postcss-preset-env": "^6.7.0",
+    "purgecss-webpack-plugin": "^4.0.0",
     "sass": "^1.32.5",
     "sass-loader": "^10.1.1",
     "style-loader": "^2.0.0",

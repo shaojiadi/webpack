@@ -37,7 +37,6 @@ module.exports = {
     //filename: 'js/built.js',    //css代码都会打包到这     如果entry是对象形式 filename: 'js/[name].js',
     filename: 'js/built.js',
     path: resolve(__dirname,'build'),
-    publicPath:'./'
   },
   module:{
     rules: [
@@ -50,7 +49,12 @@ module.exports = {
           // 'style-loader',
 
           //这个loader取代style-loader.作用：提取js中的css成单独文件
-          MiniCssExtractPlugin.loader,
+          {
+            loader: MiniCssExtractPlugin.loader,
+            options: {
+              publicPath: '../',
+            },
+          },
           //作用(处理css中的import和url这样的外部资源)   将css文件变成commonjs模块加载js中，里面内容是样式字符串
           'css-loader'
         ]
@@ -138,6 +142,16 @@ module.exports = {
           // publicPath: './media',   //公共目录
           outputPath: 'media'
         }
+      },
+      {
+        //eslint只检查js语法
+        test: /\.js$/,
+        //只检查自己写的代码
+        exclude: /node_modules/,
+        loader: 'eslint-loader',
+        options: {
+          fix: true
+        }
       }
       
     ]
@@ -164,7 +178,7 @@ module.exports = {
     //new OptimizeCssAssetsWebpackPlugin()   
   ],
   //在webpack5 需要加上这个配置选项可以自动刷新
-  // target: "web",
+  target: "web",
   mode: 'development',
 /*   devServer: {
     contentBase: resolve(__dirname,'src'),

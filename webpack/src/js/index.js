@@ -1,8 +1,12 @@
-import '../css/iconfont.css'
-import '../css/index.less'
+import '../css/iconfont.css';
+import '../css/index.less';
 
-function add(x,y){
-  return x+y;
+function add(x, y) {
+  return x + y;
 }
 
-console.log(add(1,2));
+add(1, 2);
+
+// 下一行eslint所有规则无效
+// eslint-disable-next-line
+console.log(66666);

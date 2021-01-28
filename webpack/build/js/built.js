@@ -6,15 +6,25 @@
  * or disable the default devtool with "devtool: false".
  * If you are looking for production-ready output files, see mode: "production" (https://webpack.js.org/configuration/mode/).
  */
-/******/ (function() { // webpackBootstrap
+/******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
+
+/***/ "./src/js/index.js":
+/*!*************************!*\
+  !*** ./src/js/index.js ***!
+  \*************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _css_iconfont_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../css/iconfont.css */ \"./src/css/iconfont.css\");\n/* harmony import */ var _css_index_less__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../css/index.less */ \"./src/css/index.less\");\n\n\n\nfunction add(x, y) {\n  return x + y;\n}\n\nadd(1, 2);\n\n// 下一行eslint所有规则无效\n// eslint-disable-next-line\nconsole.log(66666);\n\n//# sourceURL=webpack://webpack-development/./src/js/index.js?");
+
+/***/ }),
 
 /***/ "./src/css/iconfont.css":
 /*!******************************!*\
   !*** ./src/css/iconfont.css ***!
   \******************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 eval("__webpack_require__.r(__webpack_exports__);\n// extracted by mini-css-extract-plugin\n\n\n//# sourceURL=webpack://webpack-development/./src/css/iconfont.css?");
 
@@ -24,19 +34,9 @@ eval("__webpack_require__.r(__webpack_exports__);\n// extracted by mini-css-extr
 /*!****************************!*\
   !*** ./src/css/index.less ***!
   \****************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 eval("__webpack_require__.r(__webpack_exports__);\n// extracted by mini-css-extract-plugin\n\n\n//# sourceURL=webpack://webpack-development/./src/css/index.less?");
-
-/***/ }),
-
-/***/ "./src/js/index.js":
-/*!*************************!*\
-  !*** ./src/js/index.js ***!
-  \*************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _css_iconfont_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../css/iconfont.css */ \"./src/css/iconfont.css\");\n/* harmony import */ var _css_index_less__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../css/index.less */ \"./src/css/index.less\");\n\r\n\r\n\r\nfunction add(x,y){\r\n  return x+y;\r\n}\r\n\r\nconsole.log(add(1,2));\n\n//# sourceURL=webpack://webpack-development/./src/js/index.js?");
 
 /***/ })
 
@@ -67,15 +67,15 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _css
 /******/ 	
 /************************************************************************/
 /******/ 	/* webpack/runtime/make namespace object */
-/******/ 	!function() {
+/******/ 	(() => {
 /******/ 		// define __esModule on exports
-/******/ 		__webpack_require__.r = function(exports) {
+/******/ 		__webpack_require__.r = (exports) => {
 /******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
 /******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 /******/ 			}
 /******/ 			Object.defineProperty(exports, '__esModule', { value: true });
 /******/ 		};
-/******/ 	}();
+/******/ 	})();
 /******/ 	
 /************************************************************************/
 /******/ 	// startup

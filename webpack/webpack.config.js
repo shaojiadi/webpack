@@ -35,9 +35,9 @@ module.exports = {
  */
   output: {
     //filename: 'js/built.js',    //css代码都会打包到这     如果entry是对象形式 filename: 'js/[name].js',
-    filename: 'js/[name].js',
+    filename: 'js/built.js',
     path: resolve(__dirname,'build'),
-    publicPath:'/build/'
+    publicPath:'./'
   },
   module:{
     rules: [
@@ -47,7 +47,10 @@ module.exports = {
         use: [
           //use数组中loader执行顺序：从右到左，从下到上
           //把样式插入到DOM中，方法是在head中插入一个style标签，并把样式写入到这个标签的innerHTML里
-          'style-loader',
+          // 'style-loader',
+
+          //这个loader取代style-loader.作用：提取js中的css成单独文件
+          MiniCssExtractPlugin.loader,
           //作用(处理css中的import和url这样的外部资源)   将css文件变成commonjs模块加载js中，里面内容是样式字符串
           'css-loader'
         ]
@@ -57,9 +60,13 @@ module.exports = {
         test: /\.less$/,
         //使用多个loader处理use
         use: [
+          {
+            loader: MiniCssExtractPlugin.loader,
+            options: {
+              publicPath: '../',
+            },
+          },
           // 'style-loader',
-          //这个loader取代style-loader.作用：提取js中的css成单独文件
-          MiniCssExtractPlugin.loader,
           'css-loader',
           'less-loader',
           /*
@@ -142,16 +149,16 @@ module.exports = {
       //复制'./src/index.html'文件，并自动引入打包输出的所有资源(js/css)
       template: './src/index.html',
       //filename: 'index.html',        //文件名称，默认为index.html
-      minify: {
+   /*    minify: {
         //移除空格
         collapseWhitespace: true,
         //移除注释
         removeComments: true
-      }
+      } */
     }),
     new MiniCssExtractPlugin({
       // 对输出文件进行重命名
-      filename: 'css/[name].css'
+      filename: 'css/built.css',
     }),
     //压缩css
     //new OptimizeCssAssetsWebpackPlugin()   

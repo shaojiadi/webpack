@@ -35,7 +35,7 @@ module.exports = {
     //filename: 'js/built.js',    //css代码都会打包到这     如果entry是对象形式 filename: 'js/[name].js',
     filename: 'js/[name].js',
     path: resolve(__dirname,'build'),
-    publicPath:'/build/'
+    publicPath:'./'
   },
   module:{
     rules: [
@@ -46,6 +46,7 @@ module.exports = {
           //use数组中loader执行顺序：从右到左，从下到上
           //把样式插入到DOM中，方法是在head中插入一个style标签，并把样式写入到这个标签的innerHTML里
           //'style-loader',
+          MiniCssExtractPlugin.loader,
           //作用(处理css中的import和url这样的外部资源)   将css文件变成commonjs模块加载js中，里面内容是样式字符串
           'css-loader'
         ]
@@ -57,7 +58,12 @@ module.exports = {
         use: [
           // 'style-loader',
           //这个loader取代style-loader.作用：提取js中的css成单独文件
-          MiniCssExtractPlugin.loader,
+          {
+            loader: MiniCssExtractPlugin.loader,
+            options: {
+              publicPath: '../',
+            },
+          },
           'css-loader',
           'less-loader',
           /*

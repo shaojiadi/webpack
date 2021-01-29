@@ -1,6 +1,6 @@
 import '../css/iconfont.css';
 import '../css/index.less';
-import { demo, demo2 } from './print.js';
+import {demo,demo2} from'./print.js';
 // import '@babel/polyfill';
 
 // demo();
@@ -15,21 +15,24 @@ add(1, 2);
 // eslint-disable-next-line
 console.log(66666);
 
-const getName = (a, b) => {
-  console.log(a * b);
-};
-getName(4, 4);
 
-const promise = new Promise((resolve) => {
-  setTimeout(() => {
+const getName = (a,b)=>{  
+  console.log(a*b);
+}
+getName(4,4)
+
+
+const promise = new Promise((resolve)=>{
+  setTimeout(()=>{
     resolve();
-  }, 1000);
-});
+  },1000)
+})
 console.log(promise);
 
-if (module.hot) {
-  module.hot.accept('./print.js', () => { // 告诉webpack接受热替换的模块
+
+if(module.hot){
+  module.hot.accept('./print.js',function(){    //告诉webpack接受热替换的模块
     console.log('print.js这个文件内容有所改变');
-    demo();
-  });
+    demo()
+  })
 }

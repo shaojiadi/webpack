@@ -14,6 +14,10 @@ const PurgeCSSPlugin = require('purgecss-webpack-plugin');   //去除没有用�
 const glob = require('glob');  //node全局环境
 const PATHS = {src:join(__dirname,'src')}      //代表当前目录下的src
 
+//定义nodejs环境变量，决定使用browserlist的哪个环境，默认是生产环境
+// process.env.NODE_ENV = 'production';
+
+
 
 module.exports = {
   entry: ['./src/js/index.js','./src/index.html'],   //单入口，以index.js为打包入口    
@@ -142,21 +146,28 @@ module.exports = {
         loader: 'file-loader',
         options: {
           name: '[name][hash:10].[ext]',
-          // publicPath: './media',   //公共目录
           outputPath: 'media'
         }
       },
+      /*
+      正常来讲, 一个文件只能被一个loader处理
+      当一个文件被多个loader处理，那么一定要指定loader的执行顺序
+        先执行eslint  再执行babel
+      
+      */
      /*  {
         //eslint只检查js语法
         test: /\.js$/,
         //只检查自己写的代码
         exclude: /node_modules/,
+        //优先执行
+        enforce: 'pre',
         loader: 'eslint-loader',
         options: {
           //自动修复错误
           fix: true  
         }
-      } */
+      }, */
       /*
         JS兼容性处理: babel-loader @babel/preset-env @babel/core
           1.基本js兼容性处理 --> @babel/preset-env

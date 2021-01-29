@@ -26,7 +26,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var core
   \*************************/
 /***/ ((module) => {
 
-eval("function demo() {\n  console.log('print中的demo被调用'); // console.log(content)();\n}\n\nfunction demo2() {\n  console.log('print中的demo2被调用');\n}\n\nmodule.exports = {\n  demo: demo,\n  demo2: demo2\n};\n\n//# sourceURL=webpack://webpack-development/./src/js/print.js?");
+eval("function demo() {\n  console.log('print中的demo被调用'); // console.log(content)();\n\n  return;\n}\n\nfunction demo2() {\n  console.log('print中的demo2被调用');\n  return;\n}\n\nmodule.exports = {\n  demo: demo,\n  demo2: demo2\n};\n\n//# sourceURL=webpack://webpack-development/./src/js/print.js?");
 
 /***/ }),
 

@@ -153,10 +153,47 @@ module.exports = {
         exclude: /node_modules/,
         loader: 'eslint-loader',
         options: {
-          fix: true
+          //自动修复错误
+          fix: true  
         }
       } */
-      
+      /*
+        JS兼容性处理: babel-loader @babel/preset-env @babel/core
+          1.基本js兼容性处理 --> @babel/preset-env
+            问题: 只能转换基本语法:如promise不能转换
+          2.全部js兼容性处理 --> @babel/polyfill   直接引入即可
+            问题：只要解决部分兼容性问题，但是将所有兼容性代码全部引入。体积太大
+          3.需要做兼容性处理的就做： 按需加载 --> core-js
+      */
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        loader: 'babel-loader',
+        options: {
+          //预设： 指示babel做怎么样的兼容性处理
+          presets: [
+            [
+              '@babel/preset-env',
+              {
+                //按需加载
+                useBuiltIns: 'usage',
+                //指定corejs版本
+                corejs:{
+                  version: 3
+                },
+                //指定兼容性做到哪个版本浏览器
+                targets: {
+                  chrome: '60',
+                  firefox: '60',
+                  ie: '9',
+                  safari: '10',
+                  edge: '17'
+                }
+              }
+            ]
+          ]
+        }
+      }
     ]
   },
   plugins: [
@@ -184,12 +221,59 @@ module.exports = {
   ],
   //在webpack5 需要加上这个配置选项可以自动刷新
   target: "web",
-  // mode: 'development',
+  // mode: 'production',  //development自动会压缩代码
   devServer: {
     // contentBase: resolve(__dirname,'build'),
     compress: true,
     port: 3000,
     open: true,
     hot: true       //HRM 模块热更新  只更新改变的文件
-  }
+  },
+  // devtool: 'eval-source-map'
 }
+
+
+/*
+  source-map: 是一种提供源代码 到 构建后代码 映射技术(如果构建后代码出错，通过映射可以追踪源代码错误)
+  [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map
+  source-map： 外部
+    提示错误代码准确信息 和 源代码的错误位置
+  inline-source-map: 内联
+    只生成一个内联source-map
+    提示错误代码准确信息 和 源代码的错误位置
+  hidden-source-map： 外部
+    提示错误代码错误原因，但是没有错误位置
+    不能追踪源代码错误，只能提示到构建后代码的错误位置
+  eval-source-map： 内联
+    每一个文件都生成对应的source-map,都在eval
+    提示错误代码准确信息 和 源代码的错误位置
+  nosources-source-map：外部
+    提示错误代码准确信息， 但是没有任何源代码信息
+  cheap-source-map： 外部
+    提示错误代码准确信息 和 源代码的错误位置
+    只能精确到行
+  cheap-module-source-map: 外部
+    提示错误代码准确信息 和 源代码的错误位置
+    module会将loader的source map加入
+
+  内联和外联的区别： 1.外部生成了文件，内联没有  2.内联构建速度更快
+
+  开发环境：速度快，调试更友好
+    速度快(eval>inline>cheap>...)
+      eval-cheap-source-map
+      eval-source-map
+    调试更友好
+      source-map
+      cheap-module-source-map
+      cheap-source-map
+
+    推荐-->eval-source-map/eval-cheap-module-source-map
+
+  生产环境： 源代码要不要隐藏？ 调式要不要更友好
+    内联会让代码体积更大，所以在生产环境不用内联
+    nosources-source-map
+    hidden-source-map
+    source-map
+
+    推荐--> source-map / cheap-module-source-map
+*/

@@ -1,5 +1,6 @@
 function demo(){
   console.log('print中的demo被调用');
+  // console.log(content)();
   return;
 } 
 

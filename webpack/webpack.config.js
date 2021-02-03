@@ -15,7 +15,7 @@ const glob = require('glob');  //node全局环境
 const PATHS = {src:join(__dirname,'src')}      //代表当前目录下的src
 
 //定义nodejs环境变量，决定使用browserlist的哪个环境，默认是生产环境
-// process.env.NODE_ENV = 'production';
+process.env.NODE_ENV = 'production';
 
 
 
@@ -42,7 +42,7 @@ module.exports = {
  */
   output: {
     //filename: 'js/built.js',    //css代码都会打包到这     如果entry是对象形式 filename: 'js/[name].js',
-    filename: 'js/built.js',
+    filename: 'js/built.[contenthash:10].js',
     path: resolve(__dirname,'build'),
   },
   module:{
@@ -207,7 +207,10 @@ module.exports = {
                 }
               }
             ]
-          ]
+          ],
+          //开启babel缓存
+          //第二次构建时，会读取之前的缓存
+          cacheDirectory: true
         }
       }
     ]
@@ -228,7 +231,7 @@ module.exports = {
     }),
     new MiniCssExtractPlugin({
       // 对输出文件进行重命名
-      filename: 'css/built.css',
+      filename: 'css/built.[contenthash:10].css',
     }),
     //new OptimizeCssAssetsWebpackPlugin()   
     new PurgeCSSPlugin({
@@ -248,48 +251,3 @@ module.exports = {
   // devtool: 'eval-source-map'
 }
 
-
-/*
-  source-map: 是一种提供源代码 到 构建后代码 映射技术(如果构建后代码出错，通过映射可以追踪源代码错误)
-  [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map
-  source-map： 外部
-    提示错误代码准确信息 和 源代码的错误位置
-  inline-source-map: 内联
-    只生成一个内联source-map
-    提示错误代码准确信息 和 源代码的错误位置
-  hidden-source-map： 外部
-    提示错误代码错误原因，但是没有错误位置
-    不能追踪源代码错误，只能提示到构建后代码的错误位置
-  eval-source-map： 内联
-    每一个文件都生成对应的source-map,都在eval
-    提示错误代码准确信息 和 源代码的错误位置
-  nosources-source-map：外部
-    提示错误代码准确信息， 但是没有任何源代码信息
-  cheap-source-map： 外部
-    提示错误代码准确信息 和 源代码的错误位置
-    只能精确到行
-  cheap-module-source-map: 外部
-    提示错误代码准确信息 和 源代码的错误位置
-    module会将loader的source map加入
-
-  内联和外联的区别： 1.外部生成了文件，内联没有  2.内联构建速度更快
-
-  开发环境：速度快，调试更友好
-    速度快(eval>inline>cheap>...)
-      eval-cheap-source-map
-      eval-source-map
-    调试更友好
-      source-map
-      cheap-module-source-map
-      cheap-source-map
-
-    推荐-->eval-source-map/eval-cheap-module-source-map
-
-  生产环境： 源代码要不要隐藏？ 调式要不要更友好
-    内联会让代码体积更大，所以在生产环境不用内联
-    nosources-source-map
-    hidden-source-map
-    source-map
-
-    推荐--> source-map / cheap-module-source-map
-*/

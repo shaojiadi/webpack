@@ -1,10 +1,10 @@
 import '../css/iconfont.css';
 import '../css/index.less';
-import { demo, demo2 } from './print.js';
+import { demo} from './print.js';
 // import '@babel/polyfill';
-
-// demo();
-
+/* 
+demo();
+ */
 function add(x, y) {
   return x + y;
 }
@@ -18,7 +18,7 @@ console.log(66666);
 const getName = (a, b) => {
   console.log(a * b);
 };
-getName(4, 4);
+getName(5, 7);
 
 const promise = new Promise((resolve) => {
   setTimeout(() => {

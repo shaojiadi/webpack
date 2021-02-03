@@ -244,7 +244,7 @@ module.exports = {
   devServer: {
     // contentBase: resolve(__dirname,'build'),
     compress: true,
-    port: 3000,
+    port: 3200,
     open: true,
     hot: true       //HRM 模块热更新  只更新改变的文件
   },

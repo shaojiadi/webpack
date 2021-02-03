@@ -35,7 +35,6 @@ module.exports = {
     //filename: 'js/built.js',    //css代码都会打包到这     如果entry是对象形式 filename: 'js/[name].js',
     filename: 'js/[name].js',
     path: resolve(__dirname,'build'),
-    publicPath:'./'
   },
   module:{
     rules: [
@@ -45,8 +44,13 @@ module.exports = {
         use: [
           //use数组中loader执行顺序：从右到左，从下到上
           //把样式插入到DOM中，方法是在head中插入一个style标签，并把样式写入到这个标签的innerHTML里
-          //'style-loader',
-          MiniCssExtractPlugin.loader,
+          'style-loader',
+         /*  {
+            loader: MiniCssExtractPlugin.loader,
+            options: {
+              publicPath: '../',
+            },
+          }, */
           //作用(处理css中的import和url这样的外部资源)   将css文件变成commonjs模块加载js中，里面内容是样式字符串
           'css-loader'
         ]
@@ -56,14 +60,14 @@ module.exports = {
         test: /\.less$/,
         //使用多个loader处理use
         use: [
-          // 'style-loader',
+          'style-loader',
           //这个loader取代style-loader.作用：提取js中的css成单独文件
-          {
+        /*   {
             loader: MiniCssExtractPlugin.loader,
             options: {
               publicPath: '../',
             },
-          },
+          }, */
           'css-loader',
           'less-loader',
           /*
@@ -153,16 +157,24 @@ module.exports = {
       filename: 'cart.html',        //文件名称，默认为index.html
       chunks: ['cart','vendor'],
     }),
-    new MiniCssExtractPlugin({
+   /*  new MiniCssExtractPlugin({
       // 对输出文件进行重命名
       filename: 'css/[name].css'
-    }),   
+    }),    */
   ],
+  /*
+    1.可以将node_modules中代码单独打包一个chunk最终输出
+    2.自动分析多入口chunk,有无公共的文件。如果有会打包成一个chunk
+  */
+  optimization: {
+    splitChunks: {
+      chunks: 'all'
+    }
+  },
   //在webpack5 需要加上这个配置选项可以自动刷新
   target: "web",
   mode: 'development',
   devServer: {
-    contentBase: resolve(__dirname,'src'),
     compress: true,
     port: 3000,
     open: true,

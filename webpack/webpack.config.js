@@ -12,7 +12,10 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');   //将css打�
 const OptimizeCssAssetsWebpackPlugin = require('optimize-css-assets-webpack-plugin');  //压缩css
 const PurgeCSSPlugin = require('purgecss-webpack-plugin');   //去除没有用的css代码
 const glob = require('glob');  //node全局环境
-const PATHS = {src:join(__dirname,'src')}      //代表当前目录下的src
+const PATHS = {src:join(__dirname,'src')};      //代表当前目录下的src
+const WorkboxWebpackPlugin = require('workbox-webpack-plugin')     //pwa插件
+const webpack = require('webpack');
+const AddAssetHtmlWebpackPlugin = require('add-asset-html-webpack-plugin');
 
 //定义nodejs环境变量，决定使用browserlist的哪个环境，默认是生产环境
 process.env.NODE_ENV = 'production';
@@ -184,34 +187,50 @@ module.exports = {
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        loader: 'babel-loader',
-        options: {
-          //预设： 指示babel做怎么样的兼容性处理
-          presets: [
-            [
-              '@babel/preset-env',
-              {
-                //按需加载
-                useBuiltIns: 'usage',
-                //指定corejs版本
-                corejs:{
-                  version: 3
-                },
-                //指定兼容性做到哪个版本浏览器
-                targets: {
-                  chrome: '60',
-                  firefox: '60',
-                  ie: '9',
-                  safari: '10',
-                  edge: '17'
-                }
-              }
-            ]
-          ],
-          //开启babel缓存
-          //第二次构建时，会读取之前的缓存
-          cacheDirectory: true
-        }
+        use: [
+          /* 
+            开启多进程打包 
+            进程启动大概有600ms,进程通信也有开销。
+            只有工作消耗时间比较长，才需要多进程打包
+
+            */
+        /*   {
+            loader: 'thread-loader',
+            options: {
+              workers: 2  //进程2个
+            }
+          }, */
+          {
+            loader: 'babel-loader',
+            options: {
+              //预设： 指示babel做怎么样的兼容性处理
+              presets: [
+                [
+                  '@babel/preset-env',
+                  {
+                    //按需加载
+                    useBuiltIns: 'usage',
+                    //指定corejs版本
+                    corejs:{
+                      version: 3
+                    },
+                    //指定兼容性做到哪个版本浏览器
+                    targets: {
+                      chrome: '60',
+                      firefox: '60',
+                      ie: '9',
+                      safari: '10',
+                      edge: '17'
+                    }
+                  }
+                ]
+              ],
+              //开启babel缓存
+              //第二次构建时，会读取之前的缓存
+              cacheDirectory: true
+            }
+          }
+        ]
       }
     ]
   },
@@ -236,6 +255,25 @@ module.exports = {
     //new OptimizeCssAssetsWebpackPlugin()   
     new PurgeCSSPlugin({
       paths: glob.sync(`${PATHS.src}/**/*`,  { nodir: true }),    //子层下的所有文件
+    }),
+    new WorkboxWebpackPlugin.GenerateSW({
+      /*
+      1.帮助serviceworker快速启动
+      2.删除旧的serviceworker
+
+      生成一个serviceworker配置文件
+      */
+     clientsClaim: true,
+     skipWaiting: true
+    }),
+    //告诉webpack哪些库不参与打包，同时使用时的名称也得变
+    new webpack.DllReferencePlugin({            //与externals相似
+      manifest: resolve(__dirname,'dll/manifest.json')
+    }),
+    //将某个文件打包输出出去，并在html中自动引入该资源
+    new AddAssetHtmlWebpackPlugin({
+      filepath: resolve(__dirname,'dll/jquery.js'),
+      publicPath:  './'
     })
   ],
   //在webpack5 需要加上这个配置选项可以自动刷新
@@ -248,6 +286,10 @@ module.exports = {
     open: true,
     hot: true       //HRM 模块热更新  只更新改变的文件
   },
+ /*  externals: {
+    //忽略库名 -- npm包名
+    jquery: 'jQuery'
+  } */
   // devtool: 'eval-source-map'
 }
 

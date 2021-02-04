@@ -32,3 +32,18 @@
 }
 
 
+#box {
+  width: 200px;
+  height: 200px;
+  background: url(../img/nav2ed95d94a76.jpg) no-repeat;
+  background-size: 100% 100%;
+}
+#box2 {
+  width: 200px;
+  height: 200px;
+  background: orange;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  margin-top: 20px;
+}
+

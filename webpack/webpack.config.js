@@ -48,7 +48,7 @@ module.exports = {
     filename: 'js/built.[contenthash:10].js',
     //输出文件目录(将来所有资源输出的公共目录)
     path: resolve(__dirname,'build'),
-    //chunkFilename: '[name]_chunk.js',     //非入口chunk的名称，例如import引入、optimization生成js等资源文件
+    //chunkFilename: 'js/[name]_chunk.js',     //非入口chunk的名称，例如import引入、optimization生成js等资源文件
     //library: '[name]',   //整个库向外暴露的变量名 一般不使用
     //libraryTarget: 'window'    //变量名添加到哪个上 browser
     //libraryTarget: 'global'   //变量名添加到哪个上 node
@@ -287,12 +287,47 @@ module.exports = {
   //在webpack5 需要加上这个配置选项可以自动刷新
   target: "web",
   // mode: 'production',  //development自动会压缩代码
+  //解析模块的规则
+  resolve:{
+    //配置解析模块路径别名:优点简写路径 缺点路径没有提示
+    alias: {
+      $css:resolve(__dirname,'src/css')
+    },
+    //配置省略文件路径的后缀名
+    extensions: ['.js','.json','.css'],
+    //告诉webpack解析模块是去找哪个目录
+    modules: [resolve(__dirname,'./node_modules'),'node_modules']   //默认会逐级查找
+  },
   devServer: {
-    // contentBase: resolve(__dirname,'build'),
-    compress: true,
+    contentBase: resolve(__dirname,'build'),   //运行代码的目录
+    // 监视contentBase目录下的所有文件，一旦文件变化就会reload
+    watchContentBase: true,
+    watchOptions:{
+      //忽略文件
+      ignored: /node_modules/
+    },
+    compress: true,      //启动gzip压缩
     port: 3200,
+    host: 'localhost',   //域名
     open: true,
-    hot: true       //HRM 模块热更新  只更新改变的文件
+    hot: true,       //HRM 模块热更新  只更新改变的文件
+    //不要显示启动服务器日志信息
+    clientLogLevel: 'none',
+    //除了一些基本启动信息以外，其他内容都不要显示
+    quiet: true,
+    //如果出现错误，不要全屏提示
+    overlay: false,
+    //服务器代理  --> 解决开发环境跨域问题
+    proxy: {
+      //一旦devServer(3200)服务器接收到/api/xxx的请求，就会把请求转发到另一个服务器(3000)
+      '/api':{
+        target: 'http://localhost:3000',
+        //发送请求时，请求路径重写： 将/api/xxx  --- /xxx(去掉/api)
+        pathRewrite: {
+          '^/api': ''
+        }
+      }
+    }
   },
  /*  externals: {
     //忽略库名 -- npm包名

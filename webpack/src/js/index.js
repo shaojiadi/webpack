@@ -1,5 +1,5 @@
-import '../css/iconfont.css';
-import '../css/index.less';
+import '$css/iconfont.css';  //配置了extensions后缀名可以不加
+import '$css/index.less';
 // import { demo} from './print.js';
 // import '@babel/polyfill';
 import $ from 'jquery';

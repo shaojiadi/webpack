@@ -1,1 +1,0 @@
-(self.webpackChunkwebpack_development=self.webpackChunkwebpack_development||[]).push([[43],{351:(e,o,n)=>{"use strict";function c(e,o){return e*o}function l(){console.log("print中的demo2被调用")}n.r(o),n.d(o,{demo:()=>c,demo2:()=>l}),console.log("公共js文件")}}]);

@@ -9,6 +9,8 @@
 const {resolve} = require('path');  //用来处理绝对路径
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const t = require('terser-webpack-plugin');
+const TerserWebpackPlugin = require('terser-webpack-plugin');
 
 
 module.exports = {
@@ -35,6 +37,7 @@ module.exports = {
     //filename: 'js/built.js',    //css代码都会打包到这     如果entry是对象形式 filename: 'js/[name].js',
     filename: 'js/[name].js',
     path: resolve(__dirname,'build'),
+    chunkFilename: 'js/[name].[contenthash:10]_chunk.js',
   },
   module:{
     rules: [
@@ -169,7 +172,23 @@ module.exports = {
   optimization: {
     splitChunks: {
       chunks: 'all'
-    }
+    },
+    //将当前模块记录其他模块的并打包为一个runtime文件
+    //解决： 修改a文件导致b文件的contenthash变化（要加）
+    runtimeChunk: {
+      name: entrypoint => `runtime-${entrypoint.name}`
+    },
+    minimizer: [
+      //配置生产环境的压缩方案：js和css 
+      new TerserWebpackPlugin({
+        //开启缓存
+        //cache: true,
+        //开启多进程打包
+        //parallel: true,
+        //启动source-map
+        //sourceMap: true
+      })
+    ]
   },
   //在webpack5 需要加上这个配置选项可以自动刷新
   target: "web",

@@ -1,0 +1,1 @@
+(self.webpackChunkwebpack_development=self.webpackChunkwebpack_development||[]).push([[740],{4764:(e,o,n)=>{"use strict";function c(){console.log("print中的demo被调用")}function p(){console.log("print中的demo2被调用")}n.r(o),n.d(o,{demo:()=>c,demo2:()=>p})}}]);

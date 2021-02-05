@@ -46,7 +46,13 @@ module.exports = {
   output: {
     //filename: 'js/built.js',    //css代码都会打包到这     如果entry是对象形式 filename: 'js/[name].js',
     filename: 'js/built.[contenthash:10].js',
+    //输出文件目录(将来所有资源输出的公共目录)
     path: resolve(__dirname,'build'),
+    //chunkFilename: '[name]_chunk.js',     //非入口chunk的名称，例如import引入、optimization生成js等资源文件
+    //library: '[name]',   //整个库向外暴露的变量名 一般不使用
+    //libraryTarget: 'window'    //变量名添加到哪个上 browser
+    //libraryTarget: 'global'   //变量名添加到哪个上 node
+    //libraryTarget: 'commonjs'   
   },
   module:{
     rules: [
@@ -167,9 +173,11 @@ module.exports = {
       /*  {
         //eslint只检查js语法
         test: /\.js$/,
-        //只检查自己写的代码
+        //排除node_modules下的js文件
         exclude: /node_modules/,
-        enforce: 'pre',   //优先执行
+        //只检查src下的js文件
+        include: resolve(__dirname,'src'),
+        enforce: 'pre',   //优先执行   'post'延后执行   不加中间执行
         loader: 'eslint-loader',
         options: {
           //自动修复错误
